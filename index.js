@@ -63,7 +63,34 @@ return config.prefix;
 
 if (!fs.existsSync('./tmp')) {
 fs.mkdirSync('./tmp')
+
+// FUNÇÃO PARA PARA DAR AVISO DE ATUALIZAÇÃO 
+
+const { execSync } = require("child_process");
+
+function checkUpdate() {
+  try {
+    const local = execSync("git rev-parse HEAD").toString().trim();
+    const remote = execSync("git ls-remote origin -h refs/heads/main")
+      .toString()
+      .split("\t")[0]
+      .trim();
+
+    if (local !== remote) {
+      console.log("\n==============================");
+      console.log("⚠️  ATUALIZAÇÃO DISPONÍVEL!");
+      console.log("👉 Use: npm start up");
+      console.log("==============================\n");
+    } else {
+      console.log("✅ Bot atualizado\n");
+    }
+  } catch (err) {
+    console.log("⚠️ Não foi possível verificar atualizações.\n");
+  }
 }
+
+checkUpdate();
+
 
 //━━━━━━━━━━━━━━━━━━
 // 🎨 DESIGN DO PACK
